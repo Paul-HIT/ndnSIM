@@ -56,6 +56,8 @@
 
 #include <ndn-cxx/mgmt/dispatcher.hpp>
 
+#include <ns3/boolean.h>
+
 NS_LOG_COMPONENT_DEFINE("ndn.L3Protocol");
 
 namespace ns3 {
@@ -74,6 +76,9 @@ L3Protocol::GetTypeId(void)
       .SetGroupName("ndn")
       .SetParent<Object>()
       .AddConstructor<L3Protocol>()
+
+      .AddAttribute("KiteInTib", "Kite: Trace saved in TIB.", BooleanValue(false),
+                    MakeBooleanAccessor(&L3Protocol::m_kiteInTib), MakeBooleanChecker())
 
       .AddTraceSource("OutInterests", "OutInterests",
                       MakeTraceSourceAccessor(&L3Protocol::m_outInterests),
@@ -218,6 +223,10 @@ L3Protocol::initialize()
 
   m_impl->m_forwarder->beforeSatisfyInterest.connect(std::ref(m_satisfiedInterests));
   m_impl->m_forwarder->beforeExpirePendingInterest.connect(std::ref(m_timedOutInterests));
+
+  if (this->ifKiteInTib()) {
+    m_impl->m_forwarder->setKiteScheme();
+  }
 }
 
 class IgnoreSections

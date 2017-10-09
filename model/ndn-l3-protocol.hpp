@@ -95,6 +95,10 @@ public:
 
   virtual ~L3Protocol();
 
+  bool ifKiteInTib() {
+    return m_kiteInTib;
+  }
+
   /**
    * \brief Get smart pointer to nfd::Forwarder installed on the node
    */
@@ -218,6 +222,8 @@ private:
 
   TracedCallback<const nfd::pit::Entry&, const Face&/*in face*/, const Data&> m_satisfiedInterests;
   TracedCallback<const nfd::pit::Entry&> m_timedOutInterests;
+
+  bool m_kiteInTib;
 };
 
 } // namespace ndn
